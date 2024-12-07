@@ -5,10 +5,10 @@
 inicio = _ gramatica _ {}
 
 // Una gramática es una serie de reglas, opcionalmente separadas por punto y coma
-gramatica =_ terminal _"="_ expresion+ 
-terminal = [_a-z][_a-z0-9]* {}
-      
-expresion=  [ \t\r]*  [\n;] _ t:terminal _ "="_ c:(expresion) {return {t,c}}	
+gramatica =_ terminal _"="_ expresion+ _ ";"?
+terminal = [_a-z]i[_a-z0-9]i* {}
+
+expresion =  [ \t\r]*  [\n;] _ t:terminal _ "="_ c:(expresion) {return {t,c}}	
             /_ terminal fin 
 			/_ reservadas  fin 
             /_ caracter  fin
@@ -16,7 +16,7 @@ expresion=  [ \t\r]*  [\n;] _ t:terminal _ "="_ c:(expresion) {return {t,c}}
             /_ "("_ expresion+ _")"_ fin
             / _"/"_ expresion  fin
 
-fin=("+"/"*"/"?")?
+fin = ("+"/"*"/"?")?
 //reservadas =('"'[_a-z0-9]+'"'/"'"[_a-z0-9]+"'") {}
 reservadas = "\"" contenido:[^"]* "\"" { var text = contenido.join(""); 
             text = text.replace(/\\n/g, "\n");
@@ -27,7 +27,7 @@ reservadas = "\"" contenido:[^"]* "\"" { var text = contenido.join("");
             text = text.replace(/\\\'/g, "'");
             }
 caracter = "'" caracter:[\x00-\x7F] "'" {}
-numeros=_ numero:("["n1:[0-9]+"-"n2:[0-9]+"]") {}
+numeros = _ numero:("["n1:[0-9]+"-"n2:[0-9]+"]") {}
 
 // Espacio en blanco opcional
 _ = [ \t\n\r\n]*{}
