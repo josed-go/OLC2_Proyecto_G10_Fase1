@@ -1,26 +1,20 @@
 gramatica = producciones (_ producciones)*
 
-producciones = identificador _ "=" _ choice _ ";"
-  
-choice = concatenation (_ "/" _ concatenation)*
+producciones = identificador _ "=" _ opciones _ ";" _
 
-concatenation = expression (_ expression)*
+opciones = union (_ "/" _ union)*
 
-expression  = parsingExpression [?+*]?
+union = expresion (_ expresion)*
 
-parsingExpression  = identificador
+expresion  = expresiones [?+*]?
+
+expresiones  = identificador
                     / literales
-                    / "(" _ choice _ ")"
+                    / "(" _ opciones _ ")"
 
 literales = 
-    ("\"" contenido:[^"]* "\""/"'" contenido:[^"]* "'") { var text = contenido.join(""); 
-            text = text.replace(/\\n/g, "\n");
-            text = text.replace(/\\\\/g, "\\");
-            text = text.replace(/\\\"/g,"\"");
-            text = text.replace(/\\r/g, "\r");
-            text = text.replace(/\\t/g, "\t");
-            text = text.replace(/\\\'/g, "'");
-            }
+    "\"" [^"]* "\""
+    / "'" [^']* "'"
 
 identificador = [_a-z]i[_a-z0-9]i*
 
