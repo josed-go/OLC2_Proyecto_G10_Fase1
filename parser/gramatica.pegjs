@@ -1,28 +1,19 @@
-// Parser de Gramática PEG 
-// Soporta las reglas de sintaxis PEG especificadas
+gramatica = producciones (_ producciones)*
 
-// La regla inicial es la primera regla definida
-inicio = _ gramatica (_ gramatica)* 
+producciones = identificador _ "=" _ choice _ ";"
+  
+choice = concatenation (_ "/" _ concatenation)*
 
-// Una gramática es una serie de reglas, opcionalmente separadas por punto y coma
-gramatica = _ terminal _ "=" _ eleccion _ ";"
+concatenation = expression (_ expression)*
 
-eleccion =  valores (_ "/" _ valores)*
+expression  = parsingExpression [?+*]?
 
-valores = expresion ( _ expresion)*
+parsingExpression  = identificador
+                    / literales
+                    / "(" _ choice _ ")"
 
-expresion = _ terminal fin 
-			/_ reservadas  fin 
-            /_ caracter  fin
-            /_ numeros  fin
-            /_ "("_ expresion+ _")"_ fin
-
-fin = ("+"/"*"/"?")?
-
-terminal = [_a-z]i[_a-z0-9]i* 
-
-//reservadas =('"'[_a-z0-9]+'"'/"'"[_a-z0-9]+"'") {}
-reservadas = "\"" contenido:[^"]* "\"" { var text = contenido.join(""); 
+literales = 
+    ("\"" contenido:[^"]* "\""/"'" contenido:[^"]* "'") { var text = contenido.join(""); 
             text = text.replace(/\\n/g, "\n");
             text = text.replace(/\\\\/g, "\\");
             text = text.replace(/\\\"/g,"\"");
@@ -30,8 +21,7 @@ reservadas = "\"" contenido:[^"]* "\"" { var text = contenido.join("");
             text = text.replace(/\\t/g, "\t");
             text = text.replace(/\\\'/g, "'");
             }
-caracter = "'" caracter:[\x00-\x7F] "'" 
-numeros = _ numero:("["n1:[0-9]+"-"n2:[0-9]+"]") 
 
-// Espacio en blanco opcional
-_ = [ \t\n\r\n]*
+identificador = [_a-z]i[_a-z0-9]i*
+
+_ = [ \t\n\r]*
