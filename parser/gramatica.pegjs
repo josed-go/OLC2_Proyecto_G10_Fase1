@@ -15,24 +15,22 @@ expresiones  = identificador
                     
 // Regla principal que analiza corchetes con contenido
 corchetes
-  = "[" contenido:rango ("-" rango)* "]" {
+  = "[" contenido:(rango / caracter)+ "]" {
       return `Entrada válida: [${input}]`;
     }
 
-// Regla para validar los rangos de contenido
+// Regla para validar un rango como [A-Z]
 rango
-  = contenido:contenido {
-      // Extraemos el contenido como un solo rango para validación
-      if (contenido.length > 1) {
-        const start = contenido[0];
-        const end = contenido[contenido.length - 1];
-        if (start > end) {
-          throw new Error(`Rango inválido: [${contenido}]`);
-        }
+  = inicio:caracter "-" fin:caracter {
+      if (inicio.charCodeAt(0) > fin.charCodeAt(0)) {
+        throw new Error(`Rango inválido: [${inicio}-${fin}]`);
       }
-      return contenido;
+      return `${inicio}-${fin}`;
     }
 
+// Regla para caracteres individuales
+caracter
+  = [a-zA-Z0-9_]
 
 // Coincide con cualquier contenido que no incluya "]"
 contenido
