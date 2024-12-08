@@ -30,7 +30,7 @@ rango
 
 // Regla para caracteres individuales
 caracter
-  = [a-zA-Z0-9_]
+  = [a-zA-Z0-9_ ]
 
 // Coincide con cualquier contenido que no incluya "]"
 contenido
