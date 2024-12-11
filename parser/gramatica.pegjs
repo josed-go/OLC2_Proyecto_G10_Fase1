@@ -14,7 +14,7 @@ expresiones  =  identificador
                 / "(" _ opciones _ ")"
                 / corchetes "i"?
                 / "."
-                    
+                / "!."
 // Regla principal que analiza corchetes con contenido
 corchetes
     = "[" contenido:(rango / caracter)+ "]" {
