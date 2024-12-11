@@ -7,7 +7,7 @@ opciones = union (_ "/" _ union)*
 
 union = expresion (_ expresion)*
 
-expresion  = (("&"/"!"/"$")/ etiqueta / "@")? _ expresiones _ [?+*]?
+expresion  = (("&"/"!"/"$")/ etiqueta / "@")? _ expresiones _ ([?+*]/conteo)?
 
 etiqueta = ("@")? _ identificador _ ":"
 
@@ -17,6 +17,14 @@ expresiones  =  identificador
                 / corchetes "i"?
                 / "."
                 / "!."
+
+conteo = "|" parteconteo _ (_ delimitador )? _ "|"
+
+parteconteo = [0-9]? _ ".." _ [0-9]?
+			/ [0-9]
+
+delimitador =  "," _ expresion
+
 // Regla principal que analiza corchetes con contenido
 corchetes
     = "[" contenido:(rango / contenido)+ "]" {
