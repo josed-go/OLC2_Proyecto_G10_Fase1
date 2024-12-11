@@ -7,7 +7,7 @@ opciones = union (_ "/" _ union)*
 
 union = expresion (_ expresion)*
 
-expresion  = ("&"/"!"/"$" / etiqueta)? _ expresiones _ [?+*]?
+expresion  = (("&"/"!"/"$")/ etiqueta / "@")? _ expresiones _ [?+*]?
 
 etiqueta = ("@")? _ identificador _ ":"
 
