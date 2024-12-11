@@ -1,4 +1,4 @@
-gramatica = producciones (_ producciones)*
+gramatica = _ producciones (_ producciones)*
 
 producciones = identificador _ "=" _ opciones _ ";" _
             / identificador _ "=" _ opciones _
@@ -45,5 +45,9 @@ literales =
 
 identificador = [_a-z]i[_a-z0-9]i*
 
-_ = [ \t\n\r]*
+_ = (Comentarios /[ \t\n\r])*
 
+
+Comentarios = 
+    "//" [^\n]* 
+    / "/*" (!"*/" .)* "*/"
