@@ -1,7 +1,7 @@
 gramatica = _ producciones (_ producciones)*
 
-producciones = identificador _ ('"' identificador '"')? "=" _ opciones _ ";" _
-            / identificador _ ('"' identificador '"')?  "=" _ opciones _
+producciones = identificador _ ('"' identificador '"')? _ "=" _ opciones _ ";" _
+            / identificador _ ('"' identificador '"')? _ "=" _ opciones _
 
 opciones = union (_ "/" _ union)*
 
@@ -19,7 +19,7 @@ expresiones  =  identificador
                 / "!."
 // Regla principal que analiza corchetes con contenido
 corchetes
-    = "[" contenido:(rango / caracter)+ "]" {
+    = "[" contenido:(rango / contenido)+ "]" {
         return `Entrada válida: [${input}]`;
     }
 
