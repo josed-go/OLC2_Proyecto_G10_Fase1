@@ -7,7 +7,7 @@ opciones = union (_ "/" _ union)*
 
 union = expresion (_ expresion)*
 
-expresion  = expresiones _ [?+*]?
+expresion  = ("&"/"!"/"$")? _ expresiones _ [?+*]?
 
 expresiones  =  identificador
                 / literales "i"?
