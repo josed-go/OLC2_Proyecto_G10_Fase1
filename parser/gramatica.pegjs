@@ -1,7 +1,7 @@
 gramatica = _ producciones (_ producciones)*
 
-producciones = identificador _ "=" _ opciones _ ";" _
-            / identificador _ "=" _ opciones _
+producciones = identificador _ ('"' identificador '"')? "=" _ opciones _ ";" _
+            / identificador _ ('"' identificador '"')?  "=" _ opciones _
 
 opciones = union (_ "/" _ union)*
 
