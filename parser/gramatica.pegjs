@@ -1,16 +1,16 @@
 gramatica = _ producciones+ _
 
-producciones = identificador _ (literales)? _ "=" _ opciones _ (t";"t)? 
+producciones = _ identificador _ (literales)? _ "=" _ opciones _ (t";"t)? 
 
 opciones = union (_ "/" _ union)*
 
 union = expresion (t expresion)*
 
-expresion  = (varios/etiqueta)? t expresiones t ([?+*]/conteo)?
+expresion  = (etiqueta/varios)? t expresiones t ([?+*]/conteo)?
 
 etiqueta = ("@")? t identificador t ":" (varios)?
 
-varios = ("!"/"$"/"@")
+varios = ("!"/"$"/"@"/"&")
 
 expresiones  =  identificador
                 / literales "i"?
@@ -19,13 +19,18 @@ expresiones  =  identificador
                 / "."
                 / "!."
 
-conteo = "|" parteconteo _ (_ delimitador )? _ "|"
+// conteo = "|" parteconteo _ (_ delimitador )? _ "|"
 
-parteconteo = identificador
-            / [0-9]? _ ".." _ [0-9]?
-			/ [0-9]
+conteo = "|" _ (numero / identificador) _ "|"
+        / "|" _ (numero / identificador)? _ ".." _ (numero / identificador)? _ "|"
+        / "|" _ (numero / identificador)? _ "," _ opciones _ "|"
+        / "|" _ (numero / identificador)? _ ".." _ (numero / identificador)? _ "," _ opciones _ "|"
 
-delimitador =  "," _ expresion
+// parteconteo = identificador
+//             / [0-9]? _ ".." _ [0-9]?
+// 			/ [0-9]
+
+// delimitador =  "," _ expresion
 
 // Regla principal que analiza corchetes con contenido
 corchetes
@@ -54,6 +59,8 @@ contenido
 literales = 
     "\"" [^"]* "\""
     / "'" [^']* "'"
+
+numero = [0-9]+
 
 identificador = [_a-z]i[_a-z0-9]i*
 
