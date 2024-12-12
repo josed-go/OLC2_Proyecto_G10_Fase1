@@ -14,7 +14,7 @@ varios = ("!"/"$"/"@"/"&")
 
 expresiones  =  identificador
                 / literales "i"?
-                / "(" t opciones t ")"
+                / "(" _ opciones _ ")"
                 / corchetes "i"?
                 / "."
                 / "!."
@@ -61,11 +61,38 @@ corchete
 texto
     = [^\[\]]+
 
-literales = 
-    "\"" [^"]* "\""
-    / "'" [^']* "'"
-    
+literales = '"' stringDobleComilla* '"'
+            / "'" stringSimpleComilla* "'"
 
+stringDobleComilla = !('"' / "\\" / finLinea) .
+                    / "\\" escape
+                    / continuacionLinea
+
+stringSimpleComilla = !("'" / "\\" / finLinea) .
+                    / "\\" escape
+                    / continuacionLinea
+
+continuacionLinea = "\\" secuenciaFinLinea
+
+finLinea = [\n\r\u2028\u2029]
+
+escape = "'"
+        / '"'
+        / "\\"
+        / "b"
+        / "f"
+        / "n"
+        / "r"
+        / "t"
+        / "v"
+        / "u"
+
+secuenciaFinLinea = "\r\n" / "\n" / "\r" / "\u2028" / "\u2029"
+
+// literales = 
+//     "\"" [^"]* "\""
+//     / "'" [^']* "'"
+    
 
 numero = [0-9]+
 
