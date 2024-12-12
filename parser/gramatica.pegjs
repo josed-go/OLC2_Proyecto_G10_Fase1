@@ -6,7 +6,7 @@ opciones = union (_ "/" _ union)*
 
 union = expresion (t expresion)*
 
-expresion  = (etiqueta)? t expresiones t ([?+*]/conteo)?
+expresion  = (varios/etiqueta)? t expresiones t ([?+*]/conteo)?
 
 etiqueta = ("@")? t identificador t ":" (varios)?
 
