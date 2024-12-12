@@ -1,4 +1,4 @@
-gramatica = _ producciones+ _
+gramatica = _ producciones+ _ 
 
 producciones = _ identificador _ (literales)? _ "=" _ opciones _ (t";"t)? 
 
@@ -53,12 +53,19 @@ caracter
 
 // Coincide con cualquier contenido que no incluya "]"
 contenido
-    = [^[\]]+
+    = (corchete / texto)+
 
+corchete
+    = "[" contenido "]"
+
+texto
+    = [^\[\]]+
 
 literales = 
     "\"" [^"]* "\""
     / "'" [^']* "'"
+    
+
 
 numero = [0-9]+
 
