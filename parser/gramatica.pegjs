@@ -1,26 +1,28 @@
-gramatica = _ producciones (_ producciones)*
+gramatica = _ producciones+ _
 
-producciones = identificador _ ('"' identificador '"')? _ "=" _ opciones _ ";" _
-            / identificador _ ('"' identificador '"')? _ "=" _ opciones _
+producciones = identificador _ (literales)? _ "=" _ opciones _ (t";"t)? 
 
 opciones = union (_ "/" _ union)*
 
-union = expresion (_ expresion)*
+union = expresion (t expresion)*
 
-expresion  = (("&"/"!"/"$")/ etiqueta / "@")? _ expresiones _ ([?+*]/conteo)?
+expresion  = (etiqueta)? t expresiones t ([?+*]/conteo)?
 
-etiqueta = ("@")? _ identificador _ ":"
+etiqueta = ("@")? t identificador t ":" (varios)?
+
+varios = ("!"/"$"/"@")
 
 expresiones  =  identificador
                 / literales "i"?
-                / "(" _ opciones _ ")"
+                / "(" t opciones t ")"
                 / corchetes "i"?
                 / "."
                 / "!."
 
 conteo = "|" parteconteo _ (_ delimitador )? _ "|"
 
-parteconteo = [0-9]? _ ".." _ [0-9]?
+parteconteo = identificador
+            / [0-9]? _ ".." _ [0-9]?
 			/ [0-9]
 
 delimitador =  "," _ expresion
@@ -54,6 +56,8 @@ literales =
     / "'" [^']* "'"
 
 identificador = [_a-z]i[_a-z0-9]i*
+
+t = [ \t]*
 
 _ = (Comentarios /[ \t\n\r])*
 
