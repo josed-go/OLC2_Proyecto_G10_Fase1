@@ -1,14 +1,14 @@
 gramatica = _ producciones+ _ 
 
-producciones = _ identificador _ (literales)? _ "=" _ opciones _ (t";"t)? 
+producciones = _ identificador _ (literales)? _ "=" _ opciones (_";")? 
 
 opciones = union (_ "/" _ union)*
 
-union = expresion (t expresion)*
+union = expresion (_ expresion !(_ literales? _ "=") )*
 
-expresion  = (etiqueta/varios)? t expresiones t ([?+*]/conteo)?
+expresion  = (etiqueta/varios)? _ expresiones _ ([?+*]/conteo)?
 
-etiqueta = ("@")? t identificador t ":" (varios)?
+etiqueta = ("@")? _ identificador _ ":" (varios)?
 
 varios = ("!"/"$"/"@"/"&")
 
@@ -98,7 +98,6 @@ numero = [0-9]+
 
 identificador = [_a-z]i[_a-z0-9]i*
 
-t = [ \t]*
 
 _ = (Comentarios /[ \t\n\r])*
 
