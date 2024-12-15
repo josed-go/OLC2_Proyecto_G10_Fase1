@@ -1,6 +1,29 @@
-gramatica = _ producciones+ _ 
+{{
+    
+    // let identificadores = []
 
-producciones = _ identificador _ (literales)? _ "=" _ opciones (_";")? 
+    // import { identificadores } from '../index.js'
+
+    import { ids, usos} from '../index.js'
+    import { ErrorReglas } from './error.js';
+    import { errores } from '../index.js'
+}}
+
+gramatica = _ producciones+ _ {
+
+    let duplicados = ids.filter((item, index) => ids.indexOf(item) !== index);
+    if (duplicados.length > 0) {
+        errores.push(new ErrorReglas("Regla duplicada: " + duplicados[0]));
+    }
+
+    // Validar que todos los usos están en ids
+    let noEncontrados = usos.filter(item => !ids.includes(item));
+    if (noEncontrados.length > 0) {
+        errores.push(new ErrorReglas("Regla no encontrada: " + noEncontrados[0]));
+    }
+}
+
+producciones = _ id:identificador _ (literales)? _ "=" _ opciones (_";")? { ids.push(id) }
 
 opciones = union (_ "/" _ union)*
 
@@ -8,11 +31,11 @@ union = expresion (_ expresion !(_ literales? _ "=") )*
 
 expresion  = (etiqueta/varios)? _ expresiones _ ([?+*]/conteo)?
 
-etiqueta = ("@")? _ identificador _ ":" (varios)?
+etiqueta = ("@")? _ id:identificador _ ":" (varios)?
 
 varios = ("!"/"$"/"@"/"&")
 
-expresiones  =  identificador
+expresiones  =  id:identificador { usos.push(id) }
                 / literales "i"?
                 / "(" _ opciones _ ")"
                 / corchetes "i"?
@@ -21,10 +44,10 @@ expresiones  =  identificador
 
 // conteo = "|" parteconteo _ (_ delimitador )? _ "|"
 
-conteo = "|" _ (numero / identificador) _ "|"
-        / "|" _ (numero / identificador)? _ ".." _ (numero / identificador)? _ "|"
-        / "|" _ (numero / identificador)? _ "," _ opciones _ "|"
-        / "|" _ (numero / identificador)? _ ".." _ (numero / identificador)? _ "," _ opciones _ "|"
+conteo = "|" _ (numero / id:identificador) _ "|"
+        / "|" _ (numero / id:identificador)? _ ".." _ (numero / id2:identificador)? _ "|"
+        / "|" _ (numero / id:identificador)? _ "," _ opciones _ "|"
+        / "|" _ (numero / id:identificador)? _ ".." _ (numero / id2:identificador)? _ "," _ opciones _ "|"
 
 // parteconteo = identificador
 //             / [0-9]? _ ".." _ [0-9]?
@@ -43,13 +66,14 @@ rango
     = inicio:caracter "-" fin:caracter {
         if (inicio.charCodeAt(0) > fin.charCodeAt(0)) {
             throw new Error(`Rango inválido: [${inicio}-${fin}]`);
+
         }
         return `${inicio}-${fin}`;
     }
 
 // Regla para caracteres individuales
 caracter
-    = [a-zA-Z0-9_ ]
+    = [a-zA-Z0-9_ ] { return text()}
 
 // Coincide con cualquier contenido que no incluya "]"
 contenido
@@ -96,7 +120,7 @@ secuenciaFinLinea = "\r\n" / "\n" / "\r" / "\u2028" / "\u2029"
 
 numero = [0-9]+
 
-identificador = [_a-z]i[_a-z0-9]i*
+identificador = [_a-z]i[_a-z0-9]i* { return text() }
 
 
 _ = (Comentarios /[ \t\n\r])*
